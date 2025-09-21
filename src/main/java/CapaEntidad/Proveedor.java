@@ -9,5 +9,5 @@ package CapaEntidad;
  * @author Lelis Carlos
  */
 public class Proveedor {
-    
+    //19952
 }
