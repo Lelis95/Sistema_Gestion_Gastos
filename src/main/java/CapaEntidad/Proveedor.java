@@ -10,8 +10,8 @@ package CapaEntidad;
  */
 public class Proveedor {
     
-    private int idProveedor,idDistrito,idProvincia,idDepartamento;
-    private String ruc,razonSocial,direccion,telefono,celular,correo;
+    private int idProveedor;
+    private String ruc,razonSocial,direccion,distrito,provincia,departamento,telefono,celular,correo;
     
     //Get y Set
 
@@ -30,45 +30,45 @@ public class Proveedor {
     }
 
     /**
-     * @return the idDistrito
+     * @return the distrito
      */
-    public int getIdDistrito() {
-        return idDistrito;
+    public String getDistrito() {
+        return distrito;
     }
 
     /**
-     * @param idDistrito the idDistrito to set
+     * @param distrito the distrito to set
      */
-    public void setIdDistrito(int idDistrito) {
-        this.idDistrito = idDistrito;
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
     }
 
     /**
-     * @return the idProvincia
+     * @return the provincia
      */
-    public int getIdProvincia() {
-        return idProvincia;
+    public String getProvincia() {
+        return provincia;
     }
 
     /**
-     * @param idProvincia the idProvincia to set
+     * @param provincia the provincia to set
      */
-    public void setIdProvincia(int idProvincia) {
-        this.idProvincia = idProvincia;
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
 
     /**
-     * @return the idDepartamento
+     * @return the departamento
      */
-    public int getIdDepartamento() {
-        return idDepartamento;
+    public String getDepartamento() {
+        return departamento;
     }
 
     /**
-     * @param idDepartamento the idDepartamento to set
+     * @param departamento the departamento to set
      */
-    public void setIdDepartamento(int idDepartamento) {
-        this.idDepartamento = idDepartamento;
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     /**
@@ -161,26 +161,26 @@ public class Proveedor {
         
     }
     
-    public Proveedor(int idProveedor, String ruc, String razonSocial, String direccion, int idDistrito, int idProvincia, int idDepartamento, String telefono, String celular, String correo){
+    public Proveedor(int idProveedor, String ruc, String razonSocial, String direccion, String distrito, String provincia, String departamento, String telefono, String celular, String correo){
         this.idProveedor = idProveedor;
         this.ruc = ruc;
         this.razonSocial = razonSocial;
         this.direccion = direccion;
-        this.idDistrito = idDistrito;
-        this.idProvincia = idProvincia;
-        this.idDepartamento = idDepartamento;
+        this.distrito = distrito;
+        this.provincia = provincia;
+        this.departamento = departamento;
         this.telefono = telefono;
         this.celular = celular;
         this.correo = correo;
     }
     
-    public Proveedor(String ruc, String razonSocial, String direccion, int idDistrito, int idProvincia, int idDepartamento, String telefono, String celular, String correo){
+    public Proveedor(String ruc, String razonSocial, String direccion, String distrito, String provincia, String departamento, String telefono, String celular, String correo){
         this.ruc = ruc;
         this.razonSocial = razonSocial;
         this.direccion = direccion;
-        this.idDistrito = idDistrito;
-        this.idProvincia = idProvincia;
-        this.idDepartamento = idDepartamento;
+        this.distrito = distrito;
+        this.provincia = provincia;
+        this.departamento = departamento;
         this.telefono = telefono;
         this.celular = celular;
         this.correo = correo;

@@ -5,6 +5,7 @@
 package CapaNegocio;
 
 import CapaDatos.ProveedorDAL;
+import CapaEntidad.Proveedor;
 import java.util.List;
 
 /**
@@ -12,8 +13,8 @@ import java.util.List;
  * @author Lelis Carlos
  */
 public class ProveedorBL {
-   /* ProveedorDAL oProveedorDAL = new ProveedorDAL();
-    public List listarCompañia(){
+    ProveedorDAL oProveedorDAL = new ProveedorDAL();
+    public List listarProveedor(){
         return oProveedorDAL.listar();
     }
     public int agregarProveedor(Proveedor oproveedor){
@@ -27,5 +28,5 @@ public class ProveedorBL {
     }
     public Proveedor buscarProveedor(int id){
         return oProveedorDAL.buscar(id);
-    }*/ 
+    } 
 }

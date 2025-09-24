@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 public class ConexionBD {
     Connection cn = null;
     
-    public Connection getConexion(){
+    public Connection abrirConexion(){
         try{
             cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/regustrogastos?user=root&password=Lelis955&"
                     +"allowPublicKeyRetrieval=true&useSSL=false");
