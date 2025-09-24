@@ -12,7 +12,7 @@ import java.util.List;
  * @author e-p-l
  */
 public class GastoDAL {
-    Connection cn = new ConexionBD().getConexion();
+    Connection cn = new ConexionBD().abrirConexion();
    public List listar() {
         List<Gastos> lista = new ArrayList<>();
         try {

@@ -13,7 +13,7 @@ public class ConexionBD {
     
     public Connection abrirConexion(){
         try{
-            cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/regustrogastos?user=root&password=Lelis955&"
+            cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/registrogastos?user=root&password=Lelis955&"
                     +"allowPublicKeyRetrieval=true&useSSL=false");
         }catch(Exception el){
             System.out.println("Error Sql :"+el.getMessage());
