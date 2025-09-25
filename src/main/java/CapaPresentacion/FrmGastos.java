@@ -1,4 +1,3 @@
-
 package CapaPresentacion;
 import CapaEntidad.Gastos;
 import CapaNegocio.GastosBL;
