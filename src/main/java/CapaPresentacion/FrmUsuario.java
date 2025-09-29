@@ -4,6 +4,7 @@ package CapaPresentacion;
 import CapaEntidad.Usuario;
 import CapaNegocio.UsuarioBL;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -47,7 +48,85 @@ public class FrmUsuario extends javax.swing.JFrame {
         listar();
     }
     
+    void limpiar(){
+       txtIdUsuario.setText("");  
+       txtNomUsuario.setText("");    
+       txtApePaterno.setText("");
+       txtNombres.setText("");    
+       txtContraseña.setText("");
+       cboPerfil.setSelectedIndex(0); 
+       cboEstado.setSelectedIndex(0);
+    }
     
+    void insertar() {
+        try {
+            Usuario ousuario = new Usuario(
+            txtNomUsuario.getText(),
+            txtApePaterno.getText(),
+            txtNombres.getText(),
+            txtContraseña.getText(),
+            cboPerfil.getSelectedItem().toString(),
+            cboEstado.getSelectedIndex() == 0 ? 1 : 0);
+            
+            int r = oUsuarioBL.agregarUsuario(ousuario);
+            if (r > 0) {
+                JOptionPane.showMessageDialog(this, "Usuario insertado correctamente");
+                listar();
+                limpiar();
+            }
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al insertar: " + e.getMessage());
+        }
+    }
+    
+    
+    void actualizar() {
+        try {
+            if (txtIdUsuario.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Seleccione un usuario para actualizar");
+                return;
+            }
+            Usuario ousuario = new Usuario(
+                Integer.parseInt(txtIdUsuario.getText()),
+                txtNomUsuario.getText(),
+                txtApePaterno.getText(),
+                txtNombres.getText(),
+                txtContraseña.getText(),
+                cboPerfil.getSelectedItem().toString(),
+                cboEstado.getSelectedIndex() == 0 ? 1 : 0);
+            
+            int r = oUsuarioBL.actualizarUsuario(ousuario);
+            if (r > 0) {
+                JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente");
+                listar();
+                limpiar();
+            }
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage());
+        }
+    }
+    
+    
+    void eliminar() {
+        try {
+            if (txtIdUsuario.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese ID de usuario a eliminar");
+                return;
+            }
+            int id = Integer.parseInt(txtIdUsuario.getText());
+            int r = oUsuarioBL.eliminarUsuario(id);
+            if (r > 0) {
+                JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente");
+                listar();
+                limpiar();
+            }
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+        }
+    }
     
     
 
@@ -74,12 +153,13 @@ public class FrmUsuario extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tbTabla = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        txtNombres = new javax.swing.JPasswordField();
         txtContraseña = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         cboPerfil = new javax.swing.JComboBox<>();
+        txtNombres = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -158,12 +238,11 @@ public class FrmUsuario extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tbTabla);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 440, 250));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 510, 250));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Nombres");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
-        jPanel1.add(txtNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 180, -1));
         jPanel1.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 180, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -172,33 +251,15 @@ public class FrmUsuario extends javax.swing.JFrame {
 
         cboPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Operador" }));
         jPanel1.add(cboPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 180, -1));
+        jPanel1.add(txtNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 180, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 798, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(36, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 756, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 448, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(19, Short.MAX_VALUE)))
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 423));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
-        //insertar();
+        insertar();
     }//GEN-LAST:event_btnInsertarActionPerformed
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
@@ -208,12 +269,12 @@ public class FrmUsuario extends javax.swing.JFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
-        //actualizar();
+        actualizar();
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
-        //eliminar();
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
@@ -273,6 +334,6 @@ public class FrmUsuario extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtIdUsuario;
     private javax.swing.JTextField txtNomUsuario;
-    private javax.swing.JPasswordField txtNombres;
+    private javax.swing.JTextField txtNombres;
     // End of variables declaration//GEN-END:variables
 }

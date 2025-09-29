@@ -1,6 +1,10 @@
 
 package CapaPresentacion;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 
 public class FrmAcceso extends javax.swing.JFrame {
 
@@ -10,6 +14,52 @@ public class FrmAcceso extends javax.swing.JFrame {
     }
 
     
+    private String obtenerNombreGastos(String usuario) {
+        try (Connection con =  Conexion.getConexion();
+                  CallableStatement cs = con.prepareCall("----")) {
+            
+            cs.setString(1, usuario);
+            ResultSet rs = cs.executeQuery();
+            
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "------------" + e.getMessage());
+            }
+            return "";
+        }
+    }
+    
+    private String obtenerNombreEmpleado(String usuario) {
+        try (Connection con = Conexion.getConexion();
+             CallableStatement cs = con.prepareCall("{CALL sp_obtenerNombreEmpleado(?)}")) {
+
+            cs.setString(1, usuario);
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("nombre");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error en obtenerNombreEmpleado: " + e.getMessage());
+        }
+        return "";
+    }
+
+    private int obtenerIdEmpleado(String usuario) {
+        try (Connection con = Conexion.getConexion();
+             CallableStatement cs = con.prepareCall("-----")) {
+
+            cs.setString(1, usuario);
+            ResultSet rs = cs.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("idEmpleado");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error en obtenerIdEmpleado: " + e.getMessage());
+        }
+        return -1;
+    }
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -68,10 +118,37 @@ public class FrmAcceso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
-        // TODO add your handling code here:
+        String usuario = txtLogin.getText().trim();
+        String clave = new String (txtPass.getPassword()).trim();
+        
+        if (usuario.isEmpty() || clave.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese usuario y clave.", "Advertencia",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (verificarAcceso(usuario, clave)) {
+            JOptionPane.showMessageDialog(this, "Bienvenido", "Acceso", JOptionPane.INFORMATION_MESSAGE);
+            
+            if (usuario.equalsIgnoreCase("admin")) {
+                Form1 adminForm = new Form1();
+                adminForm.setVisible(true);
+                this.dispose();
+            }
+            else {
+                String nombreGastos = obtenerNombreGastos(usuario);
+                int idUsuario = obtenerIdUsiario(usuario);
+                this.dispose();
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Usuario o clave incorretos.","Error",JOptionPane.ERROR_MESSAGE);
+            txtPass.setText("");
+            txtPass.requestFocus();
+        }
         
     }//GEN-LAST:event_btnAccederActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
