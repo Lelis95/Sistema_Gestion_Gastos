@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package CapaNegocio;
 
 import CapaDatos.ProveedorDAL;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class ProveedorBL {
     ProveedorDAL oProveedorDAL = new ProveedorDAL();
+    
     public List listarProveedor(){
         return oProveedorDAL.listar();
     }
@@ -28,5 +30,8 @@ public class ProveedorBL {
     }
     public Proveedor buscarProveedor(int id){
         return oProveedorDAL.buscar(id);
-    } 
+    }
+    public Proveedor buscarProveedorPorRUC(String ruc){
+        return oProveedorDAL.buscarPorRUC(ruc);
+    }
 }

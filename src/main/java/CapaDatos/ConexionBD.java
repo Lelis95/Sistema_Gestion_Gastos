@@ -1,9 +1,7 @@
 
 package CapaDatos;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
+import java.sql.*;
 /**
  *
  * @author Lelis Carlos
@@ -22,11 +20,13 @@ public class ConexionBD {
         return cn;
     }
     
-    public void cerrarConexion(){
-        try{
-            cn.close();
-        }catch(Exception el){
-            System.out.println("Error al Cerrar Conexion : "+el.getMessage());
-        }
+    public void cerrarConexion(Connection conn){
+        if (conn != null) {
+         try{
+              cn.close();
+            }catch(Exception el){
+               System.out.println("Error al Cerrar Conexion : "+el.getMessage());
+           }
+      }
     }
 }
