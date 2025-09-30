@@ -9,8 +9,21 @@ import CapaEntidad.Gastos;
  * @author e-p-l
  */
 public class GastosBL {
-    GastoDAL oGasto= new GastoDAL();
+    GastoDAL gastosDAL = new GastoDAL();
     public List listar(){
-        return oGasto.listar();
+        return gastosDAL.listar();
+    }
+    public int agregar(Gastos g) {
+        return gastosDAL.agregar(g); // Llama a DAL
+    }
+    public int actualizar(Gastos g) {
+    return gastosDAL.actualizar(g);
+    }
+     public List<Gastos> buscarPorConcepto(String concepto) {
+        return gastosDAL.buscarPorConcepto(concepto);
+    }
+    
+    public List<Gastos> buscarPorProveedor(int idProveedor) {
+        return gastosDAL.buscarPorProveedor(idProveedor);
     }
 }
