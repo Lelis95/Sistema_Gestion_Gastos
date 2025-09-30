@@ -5,12 +5,12 @@ package CapaEntidad;
 public class Usuario {
     private int idUsuario;
     private String nombreUsuario, apellidoPaterno, nombres, contrasena, perfil;
-    private int estado;
+    private String estado;
 
     public Usuario() {
     }
 
-    public Usuario(String nombreUsuario, String apellidoPaterno, String nombres, String contrasena, String perfil, int estado) {
+    public Usuario(String nombreUsuario, String apellidoPaterno, String nombres, String contrasena, String perfil, String estado) {
         this.nombreUsuario = nombreUsuario;
         this.apellidoPaterno = apellidoPaterno;
         this.nombres = nombres;
@@ -19,7 +19,7 @@ public class Usuario {
         this.estado = estado;
     }
 
-    public Usuario(int idUsuario, String nombreUsuario, String apellidoPaterno, String nombres, String contrasena, String perfil, int estado) {
+    public Usuario(int idUsuario, String nombreUsuario, String apellidoPaterno, String nombres, String contrasena, String perfil, String estado) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.apellidoPaterno = apellidoPaterno;
@@ -78,11 +78,11 @@ public class Usuario {
         this.perfil = perfil;
     }
 
-    public int getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 }

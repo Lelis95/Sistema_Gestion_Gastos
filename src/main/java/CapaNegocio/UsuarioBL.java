@@ -21,7 +21,7 @@ public class UsuarioBL {
     public int eliminarUsuario(int id){
         return oUsuarioDAL.eliminar(id);
     }
-    public Usuario buscarUsuario(int id){
-        return oUsuarioDAL.buscar(id);
+    public Usuario listarUsuario(int id){
+        return oUsuarioDAL.listar(id);
     } 
 }

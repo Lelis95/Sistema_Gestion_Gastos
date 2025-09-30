@@ -14,9 +14,9 @@ public class UsuarioDAL {
    public List<Usuario> listar() {
         List<Usuario> lista = new ArrayList<>();
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_listarUsuario();}");
+            CallableStatement cs = cn.prepareCall("{call sp_listarUsuario}");
             ResultSet rs = cs.executeQuery();
-           /* while (rs.next()) {
+            while (rs.next()) {
                 lista.add(new Usuario(
                       rs.getInt(1),
                       rs.getString(2),
@@ -24,9 +24,9 @@ public class UsuarioDAL {
                       rs.getString(4),
                       rs.getString(5),  
                       rs.getString(6),
-                      rs.getInt(7)
+                      rs.getString(7)
                 ));
-            }*/
+            }
         }
         catch (Exception e) {
             System.out.println("Error listar: " + e.getMessage());
@@ -37,13 +37,13 @@ public class UsuarioDAL {
    public int agregar(Usuario unUsuario) {
         int r = 0;
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_InsertarProveedor(?,?,?,?,?,?,?,?,?)}");///////
+            CallableStatement cs = cn.prepareCall("{call sp_insertarUsuario(?,?,?,?,?,?)}");///////
             cs.setString(1, unUsuario.getNombreUsuario());
             cs.setString(2, unUsuario.getApellidoPaterno());
             cs.setString(3, unUsuario.getNombres());
             cs.setString(4, unUsuario.getContrasena());
             cs.setString(5, unUsuario.getPerfil());
-            cs.setInt(6, unUsuario.getEstado());
+            cs.setString(6, unUsuario.getEstado());
             
             ResultSet rs = cs.executeQuery();
             if (rs.next()) {
@@ -57,10 +57,10 @@ public class UsuarioDAL {
     }
    
    
-   public Usuario buscar(int codigo) {
+   public Usuario listar(int codigo) {
     Usuario oUsuario = null;
     try {
-        CallableStatement cs = cn.prepareCall("{call sp_ObtenerProveedor(?)}");
+        CallableStatement cs = cn.prepareCall("{call sp_buscarUsuario(?)}");
         cs.setInt(1, codigo);
         ResultSet rs = cs.executeQuery();
 
@@ -72,7 +72,7 @@ public class UsuarioDAL {
             oUsuario.setNombres(rs.getString("nombres"));
             oUsuario.setContrasena(rs.getString("contrasena"));
             oUsuario.setPerfil(rs.getString("perfil"));
-            oUsuario.setEstado(rs.getInt("estado"));
+            oUsuario.setEstado(rs.getString("estado"));
         }
 
         rs.close();
@@ -87,14 +87,14 @@ public class UsuarioDAL {
    public int actualizar(Usuario unUsuario) {
         int r = 0;
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_ActualizarProveedor(?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call sp_actualizarUsuario(?,?,?,?,?,?,?)}");
             cs.setInt(1, unUsuario.getIdUsuario());
             cs.setString(2, unUsuario.getNombreUsuario());
             cs.setString(3, unUsuario.getApellidoPaterno());
             cs.setString(4, unUsuario.getNombres());
             cs.setString(5, unUsuario.getContrasena());
             cs.setString(6, unUsuario.getPerfil());
-            cs.setInt(7, unUsuario.getEstado());
+            cs.setString(7, unUsuario.getEstado());
             
             ResultSet rs = cs.executeQuery();
             if (rs.next()) {
@@ -111,7 +111,7 @@ public class UsuarioDAL {
    public int eliminar(int codigo) {
         int r = 0;
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_EliminarProveedor(?)}");
+            CallableStatement cs = cn.prepareCall("{call sp_eliminarUsuario(?)}");
             cs.setInt(1, codigo);
             ResultSet rs = cs.executeQuery();
             if (rs.next()) {

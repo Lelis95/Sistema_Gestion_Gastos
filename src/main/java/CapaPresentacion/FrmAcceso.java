@@ -1,6 +1,8 @@
 
 package CapaPresentacion;
 
+import CapaDatos.ConexionBD;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
@@ -11,55 +13,71 @@ public class FrmAcceso extends javax.swing.JFrame {
     
     public FrmAcceso() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     
-    private String obtenerNombreGastos(String usuario) {
-        try (Connection con =  Conexion.getConexion();
-                  CallableStatement cs = con.prepareCall("----")) {
-            
-            cs.setString(1, usuario);
-            ResultSet rs = cs.executeQuery();
-            
+    // verificar acceso usando SP sp_verificarAcceso(p_usuario, p_clave)
+private boolean verificarAcceso(String login, String pass) {
+    String call = "{CALL sp_verificarAcceso(?, ?)}";
+    try (Connection con = new ConexionBD().abrirConexion();
+         CallableStatement cs = con.prepareCall(call)) {
+
+        cs.setString(1, login);
+        cs.setString(2, pass);
+
+        try (ResultSet rs = cs.executeQuery()) {
             if (rs.next()) {
-                JOptionPane.showMessageDialog(this, "------------" + e.getMessage());
+                return rs.getInt("existe") > 0;
             }
-            return "";
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error en verificarAcceso: " + e.getMessage());
+        e.printStackTrace();
     }
-    
-    private String obtenerNombreEmpleado(String usuario) {
-        try (Connection con = Conexion.getConexion();
-             CallableStatement cs = con.prepareCall("{CALL sp_obtenerNombreEmpleado(?)}")) {
+    return false;
+}
 
-            cs.setString(1, usuario);
-            ResultSet rs = cs.executeQuery();
+// obtener nombre (usa sp_obtenerNombreEmpleado(p_usuario) que devuelve columna "nombre")
+private String obtenerNombreUsuario(String usuario) {
+    String call = "{CALL sp_obtenerNombreEmpleado(?)}";
+    try (Connection con = new ConexionBD().abrirConexion();
+         CallableStatement cs = con.prepareCall(call)) {
 
+        cs.setString(1, usuario);
+
+        try (ResultSet rs = cs.executeQuery()) {
             if (rs.next()) {
                 return rs.getString("nombre");
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error en obtenerNombreEmpleado: " + e.getMessage());
         }
-        return "";
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error en obtenerNombreEmpleado: " + e.getMessage());
+        e.printStackTrace();
     }
+    return "";
+}
 
-    private int obtenerIdEmpleado(String usuario) {
-        try (Connection con = Conexion.getConexion();
-             CallableStatement cs = con.prepareCall("-----")) {
+// obtener id (usa sp_obtenerIdEmpleado(p_usuario) que devuelve columna "idEmpleado")
+private int obtenerIdUsuario(String usuario) {
+    String call = "{CALL sp_obtenerIdEmpleado(?)}";
+    try (Connection con = new ConexionBD().abrirConexion();
+         CallableStatement cs = con.prepareCall(call)) {
 
-            cs.setString(1, usuario);
-            ResultSet rs = cs.executeQuery();
+        cs.setString(1, usuario);
 
+        try (ResultSet rs = cs.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt("idEmpleado");
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error en obtenerIdEmpleado: " + e.getMessage());
         }
-        return -1;
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error en obtenerIdEmpleado: " + e.getMessage());
+        e.printStackTrace();
     }
+    return -1;
 }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -103,11 +121,16 @@ public class FrmAcceso extends javax.swing.JFrame {
         jPanel2.add(btnAcceder, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, -1, -1));
 
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, -1, -1));
         jPanel2.add(txtLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 120, -1));
         jPanel2.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 120, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 50, 275, 210));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 20, 300, 240));
 
         jLabel3.setText("jLabel3");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 60, -1));
@@ -118,35 +141,50 @@ public class FrmAcceso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
-        String usuario = txtLogin.getText().trim();
-        String clave = new String (txtPass.getPassword()).trim();
-        
-        if (usuario.isEmpty() || clave.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese usuario y clave.", "Advertencia",JOptionPane.WARNING_MESSAGE);
-            return;
+         String usuario = txtLogin.getText().trim();
+         String clave = new String(txtPass.getPassword()).trim();
+
+    if (usuario.isEmpty() || clave.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingrese usuario y clave.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    if (verificarAcceso(usuario, clave)) {
+        JOptionPane.showMessageDialog(this, "Bienvenido.", "Acceso", JOptionPane.INFORMATION_MESSAGE);
+
+        // Si es admin, lo mandamos también a FrmPrincipal
+        if (usuario.equalsIgnoreCase("admin")) {
+            FrmPrincipal principal = new FrmPrincipal("Administrador", 0);
+            principal.setVisible(true);
+            this.dispose();
+        } else {
+            String nombreUsuario = obtenerNombreUsuario(usuario);
+            int idUsuario = obtenerIdUsuario(usuario);
+
+            FrmPrincipal principal = new FrmPrincipal(nombreUsuario, idUsuario);
+            principal.setVisible(true);
+            this.dispose();
         }
-        
-        if (verificarAcceso(usuario, clave)) {
-            JOptionPane.showMessageDialog(this, "Bienvenido", "Acceso", JOptionPane.INFORMATION_MESSAGE);
-            
-            if (usuario.equalsIgnoreCase("admin")) {
-                Form1 adminForm = new Form1();
-                adminForm.setVisible(true);
-                this.dispose();
-            }
-            else {
-                String nombreGastos = obtenerNombreGastos(usuario);
-                int idUsuario = obtenerIdUsiario(usuario);
-                this.dispose();
-            }
-        }
-        else {
-            JOptionPane.showMessageDialog(this, "Usuario o clave incorretos.","Error",JOptionPane.ERROR_MESSAGE);
-            txtPass.setText("");
-            txtPass.requestFocus();
-        }
-        
+    } else {
+        JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+        txtPass.setText("");
+        txtPass.requestFocus();
+    }
     }//GEN-LAST:event_btnAccederActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        int respuesta = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea salir?",
+            "Confirmación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+    );
+
+    if (respuesta == JOptionPane.YES_OPTION) {
+        System.exit(0); // Cierra toda la aplicación
+    }
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     
     /**

@@ -22,7 +22,7 @@ public class FrmUsuario extends javax.swing.JFrame {
             "Nombres",
             "Contraseña",
             "Perfil",
-            "Estado",
+            "Estado"
         };
         mtabla.setColumnIdentifiers(titulos);
         List<Usuario> lista=oUsuarioBL.listar();
@@ -37,9 +37,11 @@ public class FrmUsuario extends javax.swing.JFrame {
                 };
             mtabla.addRow(data);
         }
-        tbTabla.setModel(mtabla);
+        tblUsuarios.setModel(mtabla);
         
     }
+    
+ 
     
     public FrmUsuario() {
         initComponents();
@@ -66,7 +68,7 @@ public class FrmUsuario extends javax.swing.JFrame {
             txtNombres.getText(),
             txtContraseña.getText(),
             cboPerfil.getSelectedItem().toString(),
-            cboEstado.getSelectedIndex() == 0 ? 1 : 0);
+            cboEstado.getSelectedItem().toString());
             
             int r = oUsuarioBL.agregarUsuario(ousuario);
             if (r > 0) {
@@ -94,7 +96,7 @@ public class FrmUsuario extends javax.swing.JFrame {
                 txtNombres.getText(),
                 txtContraseña.getText(),
                 cboPerfil.getSelectedItem().toString(),
-                cboEstado.getSelectedIndex() == 0 ? 1 : 0);
+                cboEstado.getSelectedItem().toString());
             
             int r = oUsuarioBL.actualizarUsuario(ousuario);
             if (r > 0) {
@@ -146,25 +148,25 @@ public class FrmUsuario extends javax.swing.JFrame {
         txtNomUsuario = new javax.swing.JTextField();
         txtApePaterno = new javax.swing.JTextField();
         btnInsertar = new javax.swing.JButton();
-        btnMostrar = new javax.swing.JButton();
+        btnListar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         cboEstado = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tbTabla = new javax.swing.JTable();
+        tblUsuarios = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         txtContraseña = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         cboPerfil = new javax.swing.JComboBox<>();
         txtNombres = new javax.swing.JTextField();
+        btnSalir = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setText("ACCESO DE USUARIO");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 17, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -198,15 +200,20 @@ public class FrmUsuario extends javax.swing.JFrame {
         });
         jPanel1.add(btnInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 350, -1, -1));
 
-        btnMostrar.setText("Mostrar");
-        btnMostrar.addActionListener(new java.awt.event.ActionListener() {
+        btnListar.setText("Listar");
+        btnListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMostrarActionPerformed(evt);
+                btnListarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnMostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, -1, -1));
+        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, -1, -1));
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnActualizarMouseClicked(evt);
+            }
+        });
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -215,6 +222,11 @@ public class FrmUsuario extends javax.swing.JFrame {
         jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 350, -1, -1));
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEliminarMouseClicked(evt);
+            }
+        });
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -225,7 +237,7 @@ public class FrmUsuario extends javax.swing.JFrame {
         cboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
         jPanel1.add(cboEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 290, 180, -1));
 
-        tbTabla.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -236,7 +248,12 @@ public class FrmUsuario extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tbTabla);
+        tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUsuariosMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblUsuarios);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 510, 250));
 
@@ -253,6 +270,17 @@ public class FrmUsuario extends javax.swing.JFrame {
         jPanel1.add(cboPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 180, -1));
         jPanel1.add(txtNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 180, -1));
 
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 350, -1, -1));
+
+        jLabel9.setText("REGISTRO DE USUARIO");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 423));
 
         pack();
@@ -262,10 +290,10 @@ public class FrmUsuario extends javax.swing.JFrame {
         insertar();
     }//GEN-LAST:event_btnInsertarActionPerformed
 
-    private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
+    private void btnListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarActionPerformed
         // TODO add your handling code here:
-       // mostrar();
-    }//GEN-LAST:event_btnMostrarActionPerformed
+        listar();
+    }//GEN-LAST:event_btnListarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
@@ -276,6 +304,48 @@ public class FrmUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
         eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarMouseClicked
+
+    private void btnActualizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnActualizarMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnActualizarMouseClicked
+
+    private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
+        int fila = tblUsuarios.getSelectedRow();
+    if (fila >= 0) {
+        txtIdUsuario.setText(tblUsuarios.getValueAt(fila, 0).toString());
+        txtNomUsuario.setText(tblUsuarios.getValueAt(fila, 1).toString());
+        txtApePaterno.setText(tblUsuarios.getValueAt(fila, 2).toString());
+        txtNombres.setText(tblUsuarios.getValueAt(fila, 3).toString());
+        txtContraseña.setText(tblUsuarios.getValueAt(fila, 4).toString());
+        cboPerfil.setSelectedItem(tblUsuarios.getValueAt(fila, 5).toString());
+
+        // Estado puede ser "Activo"/"Inactivo" o 1/0 según cómo lo guardes
+        Object estado = tblUsuarios.getValueAt(fila, 6);
+        if (estado.toString().equals("1")) {
+            cboEstado.setSelectedItem("Activo");
+        } else if (estado.toString().equals("0")) {
+            cboEstado.setSelectedItem("Inactivo");
+        } else {
+            cboEstado.setSelectedItem(estado.toString());
+        }
+    }
+    }//GEN-LAST:event_tblUsuariosMouseClicked
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(this,
+            "¿Desea salir del sistema?",
+            "Confirmación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+
+    if (opcion == JOptionPane.YES_OPTION) {
+        System.exit(0); // Cierra toda la aplicación
+    }
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -316,7 +386,8 @@ public class FrmUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnInsertar;
-    private javax.swing.JButton btnMostrar;
+    private javax.swing.JButton btnListar;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cboEstado;
     private javax.swing.JComboBox<String> cboPerfil;
     private javax.swing.JLabel jLabel1;
@@ -327,9 +398,10 @@ public class FrmUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tbTabla;
+    private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtApePaterno;
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtIdUsuario;
