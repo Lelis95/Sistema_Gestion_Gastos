@@ -17,7 +17,6 @@ public class FrmAcceso extends javax.swing.JFrame {
     }
 
     
-    // verificar acceso usando SP sp_verificarAcceso(p_usuario, p_clave)
 private boolean verificarAcceso(String login, String pass) {
     String call = "{CALL sp_verificarAcceso(?, ?)}";
     try (Connection con = new ConexionBD().abrirConexion();
@@ -38,7 +37,6 @@ private boolean verificarAcceso(String login, String pass) {
     return false;
 }
 
-// obtener nombre (usa sp_obtenerNombreEmpleado(p_usuario) que devuelve columna "nombre")
 private String obtenerNombreUsuario(String usuario) {
     String call = "{CALL sp_obtenerNombreEmpleado(?)}";
     try (Connection con = new ConexionBD().abrirConexion();
@@ -58,7 +56,6 @@ private String obtenerNombreUsuario(String usuario) {
     return "";
 }
 
-// obtener id (usa sp_obtenerIdEmpleado(p_usuario) que devuelve columna "idEmpleado")
 private int obtenerIdUsuario(String usuario) {
     String call = "{CALL sp_obtenerIdEmpleado(?)}";
     try (Connection con = new ConexionBD().abrirConexion();
@@ -130,12 +127,13 @@ private int obtenerIdUsuario(String usuario) {
         jPanel2.add(txtLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 120, -1));
         jPanel2.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 120, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 20, 300, 240));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 300, 210));
 
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/iniciar.png"))); // NOI18N
         jLabel3.setText("jLabel3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 60, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 110, 160));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 290));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 260));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
