@@ -42,6 +42,27 @@ void listar(){
         lbListar.setModel(mtabla);
         
     }
+private void deshabilitarCampos() {
+    txtId.setEnabled(false);
+    txtIdProveedor.setEnabled(false);
+    txtNumDoc.setEnabled(false);
+    txtaConcepto.setEnabled(false);
+    txtImporte.setEnabled(false);
+    cboTipoDoc.setEnabled(false);
+    cboMoneda.setEnabled(false);
+    txtFechaGasto.setEnabled(false);
+}
+
+private void habilitarCampos() {
+    txtId.setEnabled(true);
+    txtIdProveedor.setEnabled(true);
+    txtNumDoc.setEnabled(true);
+    txtaConcepto.setEnabled(true);
+    txtImporte.setEnabled(true);
+    cboTipoDoc.setEnabled(true);
+    cboMoneda.setEnabled(true);
+    txtFechaGasto.setEnabled(true);
+}
     
     void activarbotones(boolean botonGuardar,boolean botonBuscar, boolean botonEliminar){
         
@@ -122,7 +143,7 @@ void listar(){
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
-       
+       deshabilitarCampos(); // Al iniciar, todo deshabilitado
     }
 
     /**
@@ -162,7 +183,7 @@ void listar(){
         txtFechaGasto = new com.toedter.calendar.JDateChooser();
         btnListar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
-        btntodo = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GASTOS");
@@ -242,7 +263,7 @@ void listar(){
         txtaConcepto.setRows(5);
         jScrollPane1.setViewportView(txtaConcepto);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 230, 90));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 270, 90));
 
         txtImporte.setBackground(new java.awt.Color(255, 255, 255));
         txtImporte.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -304,6 +325,11 @@ void listar(){
         btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("ELIMINAR");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 120, 80, -1));
 
         lbListar.setModel(new javax.swing.table.DefaultTableModel(
@@ -328,24 +354,34 @@ void listar(){
         btnListar.setBackground(new java.awt.Color(0, 102, 153));
         btnListar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnListar.setForeground(new java.awt.Color(255, 255, 255));
-        btnListar.setText("LISTAR");
+        btnListar.setText("LISTAR TODO");
         btnListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 120, 80, -1));
+        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 120, 90, -1));
 
         btnEditar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(255, 255, 255));
         btnEditar.setText("EDITAR");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 80, 80, -1));
 
-        btntodo.setBackground(new java.awt.Color(0, 102, 153));
-        btntodo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btntodo.setForeground(new java.awt.Color(255, 255, 255));
-        btntodo.setText("TODO");
-        jPanel1.add(btntodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 80, 70, -1));
+        btnSalir.setBackground(new java.awt.Color(0, 102, 153));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalir.setText("SALIR");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 80, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 440));
 
@@ -416,6 +452,7 @@ void listar(){
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
+      
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarActionPerformed
@@ -432,7 +469,11 @@ void listar(){
             btnNuevo.setText("Nuevo");
             limpiar();
             activarbotones(false,true,false);
+            validarCampos();
+            habilitarCampos();
+            txtIdProveedor.requestFocus();
         }
+        
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
@@ -463,6 +504,43 @@ void listar(){
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int fila = lbListar.getSelectedRow();
+    if (fila >= 0) {
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar el gasto?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            int idGasto = Integer.parseInt(lbListar.getValueAt(fila, 0).toString());
+            int r = oGastoBL.eliminar(idGasto);
+            if (r > 0) {
+                JOptionPane.showMessageDialog(this, "Gasto eliminado correctamente ✅");
+                listar(); // Refrescar la tabla
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar gasto ❌");
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Seleccione un gasto de la tabla");
+    }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        if (txtId.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Primero seleccione un proveedor de la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        habilitarCampos();
+        //modoEdicion = true;
+        btnGuardar.setEnabled(false);
+        btnActualizar.setEnabled(true);
+        txtIdProveedor.requestFocus();
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -507,7 +585,7 @@ void listar(){
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnListar;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton btntodo;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cboMoneda;
     private javax.swing.JComboBox<String> cboTipoDoc;
     private javax.swing.JLabel jLabel1;
