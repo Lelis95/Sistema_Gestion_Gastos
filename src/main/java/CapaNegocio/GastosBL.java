@@ -26,4 +26,7 @@ public class GastosBL {
     public List<Gastos> buscarPorProveedor(int idProveedor) {
         return gastosDAL.buscarPorProveedor(idProveedor);
     }
+    public int eliminar(int idGasto) {
+    return gastosDAL.eliminar(idGasto);
+    }
 }

@@ -77,18 +77,13 @@ public class GastoDAL {
         cs.setString(7, g.getMoneda());
         cs.setBigDecimal(8, g.getImporte());
 
-        int f = cs.executeUpdate();
-        if (f > 0) {
-            r = 1;
-        } else {
-            r = 0;
-        }
-        cs.close();
-        } catch (Exception ex) {
-            r = 0;
-            javax.swing.JOptionPane.showMessageDialog(null, 
-                "Error al actualizar gasto: " + ex.getMessage(),
-                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                r = rs.getInt("filas afectadas");
+            }
+            cs.close();
+        } catch (Exception e) {
+            System.out.println("Error en actualizar: " + e.getMessage());
         }
         return r;
     }
@@ -140,5 +135,25 @@ public class GastoDAL {
         }
         return lista;
     }
+    public int eliminar(int idGasto) {
+    int r = 0;
+    try {
+        CallableStatement cs = cn.prepareCall("{ call sp_eliminarGasto(?) }");
+        cs.setInt(1, idGasto);
+        int f = cs.executeUpdate();
+        if (f > 0) {
+            r = 1;
+        } else {
+            r = 0;
+        }
+        cs.close();
+    } catch (Exception ex) {
+        r = 0;
+        javax.swing.JOptionPane.showMessageDialog(null, 
+            "Error al eliminar gasto: " + ex.getMessage(),
+            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    return r;
+}
 }
 
