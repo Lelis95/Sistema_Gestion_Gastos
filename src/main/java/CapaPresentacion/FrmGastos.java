@@ -216,12 +216,12 @@ private void habilitarCampos() {
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Numero Documento");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Concepto");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -248,13 +248,13 @@ private void habilitarCampos() {
         cboTipoDoc.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         cboTipoDoc.setForeground(new java.awt.Color(0, 0, 0));
         cboTipoDoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Factura", "Recibo", "Otro" }));
-        jPanel1.add(cboTipoDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 120, -1));
+        jPanel1.add(cboTipoDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 150, 30));
 
         txtNumDoc.setBackground(new java.awt.Color(255, 255, 255));
         txtNumDoc.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtNumDoc.setForeground(new java.awt.Color(0, 0, 0));
         txtNumDoc.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtNumDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 200, 120, -1));
+        jPanel1.add(txtNumDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, 30));
 
         txtaConcepto.setBackground(new java.awt.Color(255, 255, 255));
         txtaConcepto.setColumns(20);
@@ -263,74 +263,79 @@ private void habilitarCampos() {
         txtaConcepto.setRows(5);
         jScrollPane1.setViewportView(txtaConcepto);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 270, 90));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 260, 80));
 
         txtImporte.setBackground(new java.awt.Color(255, 255, 255));
         txtImporte.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtImporte.setForeground(new java.awt.Color(0, 0, 0));
         txtImporte.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, -1));
+        jPanel1.add(txtImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, 30));
 
         txtIdProveedor.setBackground(new java.awt.Color(255, 255, 255));
         txtIdProveedor.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtIdProveedor.setForeground(new java.awt.Color(0, 0, 0));
         txtIdProveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 130, -1));
+        jPanel1.add(txtIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 130, 30));
 
         btnActualizar.setBackground(new java.awt.Color(0, 102, 153));
         btnActualizar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizar.setText("ACTUALIZAR");
+        btnActualizar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 80, 90, -1));
+        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 110, 120, 30));
 
         btnBuscar.setBackground(new java.awt.Color(0, 102, 153));
         btnBuscar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscar.setText("BUSCAR");
+        btnBuscar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 80, 80, -1));
+        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 70, 120, 30));
 
         btnNuevo.setBackground(new java.awt.Color(0, 102, 153));
         btnNuevo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevo.setText("NUEVO");
+        btnNuevo.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoActionPerformed(evt);
             }
         });
-        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, 80, -1));
+        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 110, 100, 30));
 
         btnGuardar.setBackground(new java.awt.Color(0, 102, 153));
         btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("AGREGAR");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 120, 90, -1));
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 110, 90, 30));
 
         btnEliminar.setBackground(new java.awt.Color(0, 102, 153));
         btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("ELIMINAR");
+        btnEliminar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 120, 80, -1));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 110, 100, 30));
 
         lbListar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -342,46 +347,49 @@ private void habilitarCampos() {
         ));
         jScrollPane2.setViewportView(lbListar);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 160, 450, 260));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 160, 460, 260));
 
         cboMoneda.setBackground(new java.awt.Color(255, 255, 255));
         cboMoneda.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         cboMoneda.setForeground(new java.awt.Color(0, 0, 0));
         cboMoneda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Soles", "Dolares" }));
-        jPanel1.add(cboMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 120, -1));
-        jPanel1.add(txtFechaGasto, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, 140, -1));
+        jPanel1.add(cboMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 130, 30));
+        jPanel1.add(txtFechaGasto, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 134, 190, 30));
 
         btnListar.setBackground(new java.awt.Color(0, 102, 153));
         btnListar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnListar.setForeground(new java.awt.Color(255, 255, 255));
         btnListar.setText("LISTAR TODO");
+        btnListar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 120, 90, -1));
+        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 100, 30));
 
         btnEditar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(255, 255, 255));
         btnEditar.setText("EDITAR");
+        btnEditar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 80, 80, -1));
+        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 90, 30));
 
         btnSalir.setBackground(new java.awt.Color(0, 102, 153));
         btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("SALIR");
+        btnSalir.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 80, -1));
+        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 70, 90, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 440));
 
