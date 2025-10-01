@@ -8,9 +8,15 @@ import CapaDatos.UbigeoDAL;
 import CapaNegocio.ProveedorBL;
 import CapaEntidad.Proveedor;
 import CapaDatos.ConexionBD;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -28,11 +34,32 @@ public class FrmProveedor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         habilitarCampos(false); // Iniciar con campos deshabilitados
+        habilitarCombos(true);
         cargarCombosUbicacion();
         agregarEventosCombos();
+        configurarInterfazTabla();
         //consultarTodos(); // Cargar todos los proveedores al iniciar
         //lblTitulo.setText("REGISTRO Y CONSULTA DE PROVEEDORES");
     }
+    
+    private void configurarInterfazTabla() {
+        // 1. Configurar scroll pane
+        jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    
+        // 2. Configurar tabla
+        tblProveedores.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblProveedores.setRowHeight(25);
+        tblProveedores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+        // 3. Configurar header
+        JTableHeader header = tblProveedores.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        header.setReorderingAllowed(false); // Evitar que muevan las columnas
+    
+        // 4. Ajustar tamaño preferido del scroll pane
+        jScrollPane1.setPreferredSize(new Dimension(600, 400));
+}
     
         private void agregarEventosCombos() {
         cboDepartamento.addItemListener(new java.awt.event.ItemListener() {
@@ -268,6 +295,10 @@ public class FrmProveedor extends javax.swing.JFrame {
         txtTelefono.setEnabled(habilitar);
         txtCelular.setEnabled(habilitar);
         txtCorreo.setEnabled(habilitar);
+        
+    }
+    
+    private void habilitarCombos(boolean habilitar){
         cboDepartamento.setEnabled(habilitar);
         cboProvincia.setEnabled(habilitar);
         cboDistrito.setEnabled(habilitar);
@@ -742,7 +773,6 @@ public class FrmProveedor extends javax.swing.JFrame {
             
             habilitarCampos(false);
             modoEdicion = false;
-            btnAgregar.setEnabled(true);
             btnActualizar.setEnabled(false);
         }
     }//GEN-LAST:event_tblProveedoresMouseClicked
@@ -833,10 +863,6 @@ public class FrmProveedor extends javax.swing.JFrame {
         if (respuesta == JOptionPane.YES_OPTION) {
             // Cierra el formulario actual
             this.dispose();
-        
-            // Abre el formulario principal
- /*           FrmPrincipal principal = new FrmPrincipal();
-            principal.setVisible(true);*/
         }
     // Si el usuario cancela (presiona No), no hace nada
     }//GEN-LAST:event_btnSalirActionPerformed
