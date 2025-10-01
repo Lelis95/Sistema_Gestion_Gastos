@@ -35,27 +35,7 @@ public class UsuarioDAL {
         return lista;
     }
    
-   /*public int agregar(Usuario unUsuario) {
-        int r = 0;
-        try {
-            CallableStatement cs = cn.prepareCall("{call sp_insertarUsuario(?,?,?,?,?,?)}");///////
-            cs.setString(1, unUsuario.getNombreUsuario());
-            cs.setString(2, unUsuario.getApellidoPaterno());
-            cs.setString(3, unUsuario.getNombres());
-            cs.setString(4, unUsuario.getContrasena());
-            cs.setString(5, unUsuario.getPerfil());
-            cs.setString(6, unUsuario.getEstado());
-            
-            ResultSet rs = cs.executeQuery();
-            if (rs.next()) {
-                r = rs.getInt("idUsuario");
-            }
-            cs.close();
-        } catch (Exception ex) {
-            System.out.println("Error en agregar: " + ex.getMessage());
-        }
-        return r;
-    }*/
+
    public int agregar(Usuario unUsuario) {
     int r = 0;
     CallableStatement cs = null;
