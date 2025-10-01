@@ -38,7 +38,7 @@ private boolean verificarAcceso(String login, String pass) {
 }
 
 private String obtenerNombreUsuario(String usuario) {
-    String call = "{CALL sp_obtenerNombreEmpleado(?)}";
+    String call = "{CALL sp_obtenerNombreUsuario(?)}";
     try (Connection con = new ConexionBD().abrirConexion();
          CallableStatement cs = con.prepareCall(call)) {
 
@@ -57,7 +57,7 @@ private String obtenerNombreUsuario(String usuario) {
 }
 
 private int obtenerIdUsuario(String usuario) {
-    String call = "{CALL sp_obtenerIdEmpleado(?)}";
+    String call = "{CALL sp_obtenerIdUsuario(?)}";
     try (Connection con = new ConexionBD().abrirConexion();
          CallableStatement cs = con.prepareCall(call)) {
 
@@ -87,7 +87,6 @@ private int obtenerIdUsuario(String usuario) {
         btnSalir = new javax.swing.JButton();
         txtLogin = new javax.swing.JTextField();
         txtPass = new javax.swing.JPasswordField();
-        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -128,10 +127,6 @@ private int obtenerIdUsuario(String usuario) {
         jPanel2.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 120, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 300, 210));
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/iniciar.png"))); // NOI18N
-        jLabel3.setText("jLabel3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 110, 160));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 260));
 
@@ -225,7 +220,6 @@ private int obtenerIdUsuario(String usuario) {
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField txtLogin;
