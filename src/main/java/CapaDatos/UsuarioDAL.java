@@ -5,6 +5,7 @@ import CapaEntidad.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 
 public class UsuarioDAL {
@@ -34,7 +35,7 @@ public class UsuarioDAL {
         return lista;
     }
    
-   public int agregar(Usuario unUsuario) {
+   /*public int agregar(Usuario unUsuario) {
         int r = 0;
         try {
             CallableStatement cs = cn.prepareCall("{call sp_insertarUsuario(?,?,?,?,?,?)}");///////
@@ -54,7 +55,51 @@ public class UsuarioDAL {
             System.out.println("Error en agregar: " + ex.getMessage());
         }
         return r;
+    }*/
+   public int agregar(Usuario unUsuario) {
+    int r = 0;
+    CallableStatement cs = null;
+    ResultSet rs = null;
+
+    try {
+        cs = cn.prepareCall("{call sp_insertarUsuario(?,?,?,?,?,?)}");
+        cs.setString(1, unUsuario.getNombreUsuario());
+        cs.setString(2, unUsuario.getApellidoPaterno());
+        cs.setString(3, unUsuario.getNombres());
+        cs.setString(4, unUsuario.getContrasena());
+        cs.setString(5, unUsuario.getPerfil());
+        cs.setString(6, unUsuario.getEstado());
+
+        rs = cs.executeQuery();
+
+        if (rs.next()) {
+            r = rs.getInt("idUsuario");  // el procedimiento devuelve el id generado
+        }
+
+    } catch (SQLException ex) {
+        // Código 1062 = error por entrada duplicada en MySQL
+        if (ex.getErrorCode() == 1062) {
+            JOptionPane.showMessageDialog(null,
+                    "El usuario '" + unUsuario.getNombreUsuario() + "' ya existe.",
+                    "Error de duplicado",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Error al registrar usuario: " + ex.getMessage(),
+                    "Error en BD",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (cs != null) cs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    return r;
+}
    
    
    public Usuario listar(int codigo) {
