@@ -15,7 +15,7 @@ public class GastoDAL {
    public List listar() {
         List<Gastos> lista = new ArrayList<>();
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_listarGasto()}");
+            CallableStatement cs = cn.prepareCall("{call sp_listarGastos()}");
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 lista.add(new Gastos(
@@ -64,9 +64,10 @@ public class GastoDAL {
         }
         return r;
     }
-    public int actualizar(Gastos g)     {
-    int r = 0;
+    public int actualizar(Gastos g) {
+    int r = 0; // r almacenará el número de filas afectadas
     try {
+        // 1. Prepara la llamada al procedimiento
         CallableStatement cs = cn.prepareCall("{ call sp_actualizarGastos(?,?,?,?,?,?,?,?) }");
         cs.setInt(1, g.getIdgasto());
         cs.setInt(2, g.getIdProveedor());
@@ -76,17 +77,14 @@ public class GastoDAL {
         cs.setString(6, g.getConcepto());
         cs.setString(7, g.getMoneda());
         cs.setBigDecimal(8, g.getImporte());
-
-        ResultSet rs = cs.executeQuery();
-            if (rs.next()) {
-                r = rs.getInt("filas afectadas");
-            }
-            cs.close();
+        r = cs.executeUpdate(); 
+      
+        cs.close();
         } catch (Exception e) {
             System.out.println("Error en actualizar: " + e.getMessage());
         }
-        return r;
-    }
+        return r; // Devuelve el número de filas actualizadas
+}
     
     public List<Gastos> buscarPorConcepto(String concepto) {
         List<Gastos> lista = new ArrayList<>();
@@ -96,11 +94,11 @@ public class GastoDAL {
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 lista.add(new Gastos(
-                    rs.getInt("idgasto"),
+                    rs.getInt("idGastos"),
                     rs.getInt("idProveedor"),
-                    rs.getDate("fechaasto"),
-                    rs.getString("tipodocumento"),
-                    rs.getString("numerodocumento"),
+                    rs.getDate("fechaGasto"),
+                    rs.getString("tipoDocumento"),
+                    rs.getString("numeroDocumento"),
                     rs.getString("concepto"),
                     rs.getString("moneda"),
                     rs.getBigDecimal("importe")
@@ -115,16 +113,16 @@ public class GastoDAL {
     public List<Gastos> buscarPorProveedor(int idProveedor) {
         List<Gastos> lista = new ArrayList<>();
         try {
-            CallableStatement cs = cn.prepareCall("{call sp_buscarGastosPorProveedor(?)}");
+            CallableStatement cs = cn.prepareCall("{call sp_buscarGastoPorId(?)}");
             cs.setInt(1, idProveedor);
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 lista.add(new Gastos(
-                    rs.getInt("idgasto"),
+                    rs.getInt("idGastos"),
                     rs.getInt("idProveedor"),
-                    rs.getDate("fechagasto"),
-                    rs.getString("tipodocumento"),
-                    rs.getString("numerodocumento"),
+                    rs.getDate("fechaGasto"),
+                    rs.getString("tipoDocumento"),
+                    rs.getString("numeroDocumento"),
                     rs.getString("concepto"),
                     rs.getString("moneda"),
                     rs.getBigDecimal("importe")
@@ -138,7 +136,7 @@ public class GastoDAL {
     public int eliminar(int idGasto) {
     int r = 0;
     try {
-        CallableStatement cs = cn.prepareCall("{ call sp_eliminarGasto(?) }");
+        CallableStatement cs = cn.prepareCall("{ call sp_eliminarGastos(?) }");
         cs.setInt(1, idGasto);
         int f = cs.executeUpdate();
         if (f > 0) {
