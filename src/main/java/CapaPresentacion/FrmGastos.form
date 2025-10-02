@@ -537,7 +537,7 @@
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Botones">
+                <TitledBorder justification="2" title="Botones">
                   <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                     <LineBorder>
                       <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
@@ -554,7 +554,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="490" y="40" width="400" height="130"/>
+              <AbsoluteConstraints x="500" y="40" width="400" height="130"/>
             </Constraint>
           </Constraints>
 
