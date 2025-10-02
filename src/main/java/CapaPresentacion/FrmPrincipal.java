@@ -7,12 +7,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     public FrmPrincipal() {
         initComponents();
-        setLocationRelativeTo(null);
+        
     }
     
-    public FrmPrincipal(String nombreUsuario, int idUsuario) {
+    public FrmPrincipal(String nombreUsuario, int idUsuario, String perfil) {
     initComponents();
     this.setTitle("Menú Principal - Bienvenido " + nombreUsuario);
+
+    String perfilNorm = (perfil == null) ? "" : perfil.trim().toUpperCase();
+
+    if (perfilNorm.equals("ADMINISTRADOR")) {
+    } else if (perfilNorm.equals("OPERADOR")) {
+        usuario.setEnabled(false); 
+    }
 }
 
     

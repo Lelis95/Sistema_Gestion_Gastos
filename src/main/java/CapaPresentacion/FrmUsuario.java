@@ -294,7 +294,7 @@ public class FrmUsuario extends javax.swing.JFrame {
         jLabel9.setText("REGISTRO DE USUARIO");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 360));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 370));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

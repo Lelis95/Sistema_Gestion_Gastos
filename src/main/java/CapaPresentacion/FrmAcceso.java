@@ -2,6 +2,8 @@
 package CapaPresentacion;
 
 import CapaDatos.ConexionBD;
+import CapaEntidad.Usuario;
+import CapaNegocio.UsuarioBL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -74,6 +76,26 @@ private int obtenerIdUsuario(String usuario) {
     }
     return -1;
 }
+
+private String obtenerRolUsuario(String usuario) {
+    String rol = null;
+    String call = "{CALL sp_obtenerRolUsuario(?)}";
+    try (Connection con = new ConexionBD().abrirConexion();
+         CallableStatement cs = con.prepareCall(call)) {
+
+        cs.setString(1, usuario);
+
+        try (ResultSet rs = cs.executeQuery()) {
+            if (rs.next()) {
+                rol = rs.getString("rol");  
+            }
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error en obtenerRolUsuario: " + e.getMessage());
+    }
+    return rol;
+}
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -134,8 +156,8 @@ private int obtenerIdUsuario(String usuario) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
-         String usuario = txtLogin.getText().trim();
-         String clave = new String(txtPass.getPassword()).trim();
+      /*String usuario = txtLogin.getText().trim();
+        String clave = new String(txtPass.getPassword()).trim();
 
     if (usuario.isEmpty() || clave.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Ingrese usuario y clave.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -162,7 +184,38 @@ private int obtenerIdUsuario(String usuario) {
         JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
         txtPass.setText("");
         txtPass.requestFocus();
+    }*/
+      
+      
+       String usuario = txtLogin.getText().trim();
+    String clave = new String(txtPass.getPassword()).trim();
+
+    if (usuario.isEmpty() || clave.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingrese usuario y clave.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
     }
+
+    // Aquí debes validar contra la BD (ejemplo con UsuarioBL)
+    UsuarioBL bl = new UsuarioBL();
+    Usuario u = bl.validarLogin(usuario, clave);
+
+    if (u != null) {
+        JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombreUsuario(), "Acceso", JOptionPane.INFORMATION_MESSAGE);
+
+        FrmPrincipal principal = new FrmPrincipal(u.getNombreUsuario(), u.getIdUsuario(), u.getPerfil());
+        principal.setVisible(true);
+        this.dispose();
+
+    } else {
+        JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+        txtPass.setText("");
+        txtPass.requestFocus();
+    }
+   
+      
+      
+      
+    
     }//GEN-LAST:event_btnAccederActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed

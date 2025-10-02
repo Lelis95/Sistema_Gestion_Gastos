@@ -141,4 +141,70 @@ public class UsuarioDAL {
         }
         return r;
     }
+   
+  public Usuario login(String user, String pass) {
+        Usuario u = null;
+        try {
+            CallableStatement cs = cn.prepareCall("{call sp_login(?,?)}");
+            cs.setString(1, user);
+            cs.setString(2, pass);
+
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                u = new Usuario();
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombreUsuario(rs.getString("nombreUsuario"));
+                u.setPerfil(rs.getString("perfil"));
+            }
+
+            rs.close();
+            cs.close();
+            cn.close();
+
+        } catch (Exception e) {
+            System.out.println("Error en login: " + e.getMessage());
+        }
+        return u; 
+    }
+  
+  
+  public String obtenerRolUsuario(String usuario) {
+        String rol = null;
+        try {
+            CallableStatement cs = cn.prepareCall("{call sp_obtenerRolUsuario(?)}");
+            cs.setString(1, usuario);
+
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                rol = rs.getString("rol"); // campo de tu tabla usuario
+            }
+
+            rs.close();
+            cs.close();
+            cn.close();
+        } catch (Exception e) {
+            System.out.println("Error en DAL.obtenerRolUsuario: " + e.getMessage());
+        }
+        return rol;
+    }
+  
+  public int obtenerIdUsuario(String login) {
+    int id = 0;
+    try (Connection con = new ConexionBD().abrirConexion();
+         CallableStatement cs = con.prepareCall("{CALL sp_obtenerIdUsuario(?)}")) {
+        cs.setString(1, login);
+        try (ResultSet rs = cs.executeQuery()) {
+            if (rs.next()) {
+                id = rs.getInt("idUsuario");
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return id;
+}
+
+    public String obtenerNombreUsuario(String usuario) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
 }

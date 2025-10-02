@@ -7,7 +7,9 @@ import java.util.List;
 
 public class UsuarioBL {
     
-    UsuarioDAL oUsuarioDAL= new UsuarioDAL();
+    private UsuarioDAL oUsuarioDAL= new UsuarioDAL();
+    
+   // private UsuarioDAL dal;
     
     public List listar(){
         return oUsuarioDAL.listar();
@@ -24,4 +26,20 @@ public class UsuarioBL {
     public Usuario listarUsuario(int id){
         return oUsuarioDAL.listar(id);
     } 
+    public Usuario validarLogin(String login, String pass) {
+    UsuarioDAL dal = new UsuarioDAL();
+    return dal.login(login, pass);
+}
+    
+    public String obtenerRolUsuario(String usuario) {
+        return oUsuarioDAL.obtenerRolUsuario(usuario);
+    }
+
+    public int obtenerIdUsuario(String usuario) {
+        return oUsuarioDAL.obtenerIdUsuario(usuario);
+    }
+
+    /*public String obtenerNombreUsuario(String usuario) {
+        return oUsuarioDAL.obtenerNombreUsuario(usuario);
+    }*/
 }
