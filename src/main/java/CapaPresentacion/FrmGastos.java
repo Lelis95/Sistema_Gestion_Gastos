@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 public class FrmGastos extends javax.swing.JFrame {
 
 GastosBL oGastoBL = new GastosBL();
-void listar(){
+/* void listar(){
         DefaultTableModel mtabla = new DefaultTableModel();
         String [] titulos = {
             "IdGasto",
@@ -41,6 +41,31 @@ void listar(){
         }
         lbListar.setModel(mtabla);
         
+    }*/
+void listar() {
+        DefaultTableModel mtabla = new DefaultTableModel();
+        String[] titulos = {
+            "Id_Gasto", "Id_Proveedor", "Fecha_Gasto", "Tipo_Documento",
+            "Numero_Documento", "Concepto", "Moneda", "Importe"
+        };
+        mtabla.setColumnIdentifiers(titulos);
+        
+        List<Gastos> lista = oGastoBL.listar();
+        for (Gastos gasto : lista) {
+            Object[] data = {
+                gasto.getIdgasto(),
+                gasto.getIdProveedor(),
+                gasto.getFechaGasto(),
+                gasto.getTipoDocumento(),
+                gasto.getNumeroDocumento(),
+                gasto.getConcepto(),
+                gasto.getMoneda(),
+                gasto.getImporte()
+            };
+            mtabla.addRow(data);
+        }
+        tblListar.setModel(mtabla);
+        actualizarResultados();
     }
 private void deshabilitarCampos() {
     txtId.setEnabled(false);
@@ -63,79 +88,89 @@ private void habilitarCampos() {
     cboMoneda.setEnabled(true);
     txtFechaGasto.setEnabled(true);
 }
-    
-    void activarbotones(boolean botonGuardar,boolean botonBuscar, boolean botonEliminar){
-        
+  
+void activarBotones(boolean botonGuardar, boolean botonEditar, boolean botonEliminar) {
         btnGuardar.setEnabled(botonGuardar);
-        btnActualizar.setEnabled(botonGuardar);
-        btnBuscar.setEnabled(botonGuardar);
+        btnActualizar.setEnabled(botonEditar);
+        btnEditar.setEnabled(botonEditar);
         btnEliminar.setEnabled(botonEliminar);
     }
-    private boolean validarCampos() {
-        if (txtFechaGasto.getDate() == null ||
-            cboTipoDoc.getSelectedItem() == null ||
-            txtNumDoc.getText().trim().isEmpty() ||
-            txtaConcepto.getText().trim().isEmpty() ||
-            cboMoneda.getSelectedItem() == null ||
-            txtImporte.getText().trim().isEmpty() ||
-            txtIdProveedor.getText().trim().isEmpty()) {
-            
-            JOptionPane.showMessageDialog(this, 
-                "Todos los campos deben estar llenos", 
-                "Validación", JOptionPane.WARNING_MESSAGE);
+ private void actualizarResultados() {
+        int total = tblListar.getRowCount();
+        lbResultado.setText("Total de resultados: " + total);
+    }
+    
+ private boolean validarCampos() {
+        if (txtFechaGasto.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        
+        if (txtNumDoc.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el número de documento", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (txtaConcepto.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el concepto", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (txtImporte.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el importe", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (txtIdProveedor.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el ID del proveedor", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         try {
             new BigDecimal(txtImporte.getText());
-            Integer.parseInt(txtIdProveedor.getText());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Importe e ID Proveedor deben ser números válidos", 
-                "Validación", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Importe debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        
+        try {
+            Integer.parseInt(txtIdProveedor.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID Proveedor debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         return true;
     }
-    void llenarTabla(List<Gastos> lista) {
-    DefaultTableModel mtabla = new DefaultTableModel();
-    String [] titulos = {
-        "IdGasto",
-        "FechaGasto",
-        "TipoDocumento",
-        "NumeroDocumento",
-        "Concepto",
-        "Moneda",
-        "Importe",
-        "IdProveedor"
-    };
-    mtabla.setColumnIdentifiers(titulos);
-    for (Gastos g : lista) {
-        Object data [] = {
-            g.getIdgasto(),
-            g.getFechaGasto(),
-            g.getTipoDocumento(),
-            g.getNumeroDocumento(),
-            g.getConcepto(),
-            g.getMoneda(),
-            g.getImporte(),
-            g.getIdProveedor()
-        };
-        mtabla.addRow(data);
+    
+     void limpiar() {
+        txtId.setText("");
+        txtFechaGasto.setDate(null);
+        cboTipoDoc.setSelectedIndex(0);
+        txtNumDoc.setText("");
+        txtaConcepto.setText("");
+        cboMoneda.setSelectedIndex(0);
+        txtImporte.setText("");
+        txtIdProveedor.setText("");
+        //activarBotones(true, false, false);
     }
-    lbListar.setModel(mtabla);
-}
-   void limpiar(){
-    txtId.setText("");  
-    txtFechaGasto.setDate(null); // Suponiendo que es un JDateChooser
-    cboTipoDoc.setSelectedIndex(0); // Selecciona el primer item
-    txtNumDoc.setText("");
-    txtaConcepto.setText("");    
-    cboMoneda.setSelectedIndex(0);
-    txtImporte.setText("");
-    txtIdProveedor.setText("");
-}
+     private void cargarTablaBusqueda(List<Gastos> lista) {
+        DefaultTableModel mtabla = new DefaultTableModel();
+        String[] titulos = {
+            "Id_Gasto", "Id_Proveedor", "Fecha_Gasto", "Tipo_Documento",
+            "Numero_Documento", "Concepto", "Moneda", "Importe"
+        };
+        mtabla.setColumnIdentifiers(titulos);
+        
+        for (Gastos gasto : lista) {
+            Object[] data = {
+                gasto.getIdgasto(),
+                gasto.getIdProveedor(),
+                gasto.getFechaGasto(),
+                gasto.getTipoDocumento(),
+                gasto.getNumeroDocumento(),
+                gasto.getConcepto(),
+                gasto.getMoneda(),
+                gasto.getImporte()
+            };
+            mtabla.addRow(data);
+        }
+        tblListar.setModel(mtabla);
+        actualizarResultados();
+    }
     /**
      * Creates new form FrmGastos
      */
@@ -172,17 +207,21 @@ private void habilitarCampos() {
         txtaConcepto = new javax.swing.JTextArea();
         txtImporte = new javax.swing.JTextField();
         txtIdProveedor = new javax.swing.JTextField();
-        btnActualizar = new javax.swing.JButton();
-        btnBuscar = new javax.swing.JButton();
-        btnNuevo = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lbListar = new javax.swing.JTable();
+        tblListar = new javax.swing.JTable();
         cboMoneda = new javax.swing.JComboBox<>();
         txtFechaGasto = new com.toedter.calendar.JDateChooser();
+        lbResultado = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnBuscar = new javax.swing.JButton();
+        btnTodo = new javax.swing.JButton();
         btnListar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        btnActualizar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -201,60 +240,61 @@ private void habilitarCampos() {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Id Gasto");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Fecha Gasto");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Tipo Documento");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Numero Documento");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Concepto");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Moneda");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, 20));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, -1, 20));
 
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Importe");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, -1, 20));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, -1, 20));
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("IdProveedor");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, 20));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, 20));
 
         txtId.setBackground(new java.awt.Color(0, 0, 51));
         txtId.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtId.setForeground(new java.awt.Color(255, 255, 255));
         txtId.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 110, -1));
+        txtId.setEnabled(false);
+        jPanel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 110, -1));
 
         cboTipoDoc.setBackground(new java.awt.Color(255, 255, 255));
         cboTipoDoc.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         cboTipoDoc.setForeground(new java.awt.Color(0, 0, 0));
         cboTipoDoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Factura", "Recibo", "Otro" }));
-        jPanel1.add(cboTipoDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 150, 30));
+        jPanel1.add(cboTipoDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, 150, 30));
 
         txtNumDoc.setBackground(new java.awt.Color(255, 255, 255));
         txtNumDoc.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtNumDoc.setForeground(new java.awt.Color(0, 0, 0));
         txtNumDoc.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtNumDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, 30));
+        jPanel1.add(txtNumDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 220, 130, 30));
 
         txtaConcepto.setBackground(new java.awt.Color(255, 255, 255));
         txtaConcepto.setColumns(20);
@@ -263,21 +303,94 @@ private void habilitarCampos() {
         txtaConcepto.setRows(5);
         jScrollPane1.setViewportView(txtaConcepto);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 260, 80));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 240, 80));
 
         txtImporte.setBackground(new java.awt.Color(255, 255, 255));
         txtImporte.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtImporte.setForeground(new java.awt.Color(0, 0, 0));
         txtImporte.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, 30));
+        jPanel1.add(txtImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 390, 130, 30));
 
         txtIdProveedor.setBackground(new java.awt.Color(255, 255, 255));
         txtIdProveedor.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         txtIdProveedor.setForeground(new java.awt.Color(0, 0, 0));
         txtIdProveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jPanel1.add(txtIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 130, 30));
+        jPanel1.add(txtIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 130, 30));
 
-        btnActualizar.setBackground(new java.awt.Color(0, 102, 153));
+        tblListar.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(tblListar);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 180, 530, 290));
+
+        cboMoneda.setBackground(new java.awt.Color(255, 255, 255));
+        cboMoneda.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        cboMoneda.setForeground(new java.awt.Color(0, 0, 0));
+        cboMoneda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Soles", "Dolares" }));
+        jPanel1.add(cboMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 350, 130, 30));
+        jPanel1.add(txtFechaGasto, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 190, 30));
+
+        lbResultado.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lbResultado.setForeground(new java.awt.Color(255, 255, 255));
+        lbResultado.setText("Total de Resultado");
+        jPanel1.add(lbResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 490, 130, 30));
+
+        jPanel2.setBackground(new java.awt.Color(0, 0, 51));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255)), "Consultas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnBuscar.setBackground(new java.awt.Color(0, 102, 153));
+        btnBuscar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscar.setText("BUSCAR POR CONCEPTO");
+        btnBuscar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 150, 30));
+
+        btnTodo.setBackground(new java.awt.Color(0, 102, 153));
+        btnTodo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnTodo.setForeground(new java.awt.Color(255, 255, 255));
+        btnTodo.setText("LISTAR TODO");
+        btnTodo.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 0, 0)));
+        btnTodo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTodoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnTodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, 110, 30));
+
+        btnListar.setBackground(new java.awt.Color(0, 102, 153));
+        btnListar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnListar.setForeground(new java.awt.Color(255, 255, 255));
+        btnListar.setText("BUSCAR POR ID");
+        btnListar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
+        btnListar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, 30));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 350, 100));
+        jPanel2.getAccessibleContext().setAccessibleName("Consultas");
+
+        jPanel3.setBackground(new java.awt.Color(0, 0, 51));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)), "Botones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnActualizar.setBackground(new java.awt.Color(0, 51, 102));
         btnActualizar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
         btnActualizar.setText("ACTUALIZAR");
@@ -287,45 +400,9 @@ private void habilitarCampos() {
                 btnActualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 110, 120, 30));
+        jPanel3.add(btnActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 100, 30));
 
-        btnBuscar.setBackground(new java.awt.Color(0, 102, 153));
-        btnBuscar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setText("BUSCAR");
-        btnBuscar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 70, 120, 30));
-
-        btnNuevo.setBackground(new java.awt.Color(0, 102, 153));
-        btnNuevo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
-        btnNuevo.setText("NUEVO");
-        btnNuevo.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
-        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 110, 100, 30));
-
-        btnGuardar.setBackground(new java.awt.Color(0, 102, 153));
-        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setText("AGREGAR");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 110, 90, 30));
-
-        btnEliminar.setBackground(new java.awt.Color(0, 102, 153));
+        btnEliminar.setBackground(new java.awt.Color(0, 51, 102));
         btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("ELIMINAR");
@@ -335,39 +412,21 @@ private void habilitarCampos() {
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 110, 100, 30));
+        jPanel3.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 100, 30));
 
-        lbListar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        jScrollPane2.setViewportView(lbListar);
-
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 160, 460, 260));
-
-        cboMoneda.setBackground(new java.awt.Color(255, 255, 255));
-        cboMoneda.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        cboMoneda.setForeground(new java.awt.Color(0, 0, 0));
-        cboMoneda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Soles", "Dolares" }));
-        jPanel1.add(cboMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 130, 30));
-        jPanel1.add(txtFechaGasto, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 134, 190, 30));
-
-        btnListar.setBackground(new java.awt.Color(0, 102, 153));
-        btnListar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnListar.setForeground(new java.awt.Color(255, 255, 255));
-        btnListar.setText("LISTAR TODO");
-        btnListar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
-        btnListar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setBackground(new java.awt.Color(0, 51, 102));
+        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setText("AGREGAR");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnListar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, 100, 30));
+        jPanel3.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 90, 30));
 
+        btnEditar.setBackground(new java.awt.Color(0, 51, 102));
         btnEditar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(255, 255, 255));
         btnEditar.setText("EDITAR");
@@ -377,9 +436,21 @@ private void habilitarCampos() {
                 btnEditarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 90, 30));
+        jPanel3.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 90, 30));
 
-        btnSalir.setBackground(new java.awt.Color(0, 102, 153));
+        btnNuevo.setBackground(new java.awt.Color(0, 51, 102));
+        btnNuevo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevo.setText("NUEVO");
+        btnNuevo.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 0, 0)));
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, 90, 30));
+
+        btnSalir.setBackground(new java.awt.Color(0, 51, 102));
         btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("SALIR");
@@ -389,110 +460,31 @@ private void habilitarCampos() {
                 btnSalirActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 70, 90, 30));
+        jPanel3.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, 90, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 440));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, 400, 130));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 550));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-       String concepto = txtaConcepto.getText().trim();
-    String idProveedorStr = txtIdProveedor.getText().trim();
-    
-    if (!concepto.isEmpty()) {
-        // Buscar por concepto
-        List<Gastos> lista = oGastoBL.buscarPorConcepto(concepto);
-        if (lista.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "No se encontraron gastos con el concepto: " + concepto,
-                "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            llenarTabla(lista);
-            JOptionPane.showMessageDialog(this, 
-                "Se encontraron " + lista.size() + " gastos",
-                "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+      
+      String concepto = JOptionPane.showInputDialog(this, "Ingrese el concepto a buscar:");
+        if (concepto != null && !concepto.trim().isEmpty()) {
+            List<Gastos> lista = oGastoBL.buscarPorConcepto(concepto);
+            cargarTablaBusqueda(lista);
         }
-    } else if (!idProveedorStr.isEmpty()) {
-        try {
-            int idProveedor = Integer.parseInt(idProveedorStr);
-            // Buscar por proveedor
-            List<Gastos> lista = oGastoBL.buscarPorProveedor(idProveedor);
-            if (lista.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "No se encontraron gastos para el proveedor ID: " + idProveedor,
-                    "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                llenarTabla(lista);
-                JOptionPane.showMessageDialog(this, 
-                    "Se encontraron " + lista.size() + " gastos para el proveedor",
-                    "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "ID Proveedor debe ser un número válido",
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            "Ingrese un concepto o un ID de proveedor para buscar",
-            "Búsqueda", JOptionPane.WARNING_MESSAGE);
-    }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        try {
-        Gastos g = new Gastos();
-        g.setFechaGasto(txtFechaGasto.getDate());
-        g.setTipoDocumento(cboTipoDoc.getSelectedItem().toString());
-        g.setNumeroDocumento(txtNumDoc.getText());
-        g.setConcepto(txtaConcepto.getText());
-        g.setMoneda(cboMoneda.getSelectedItem().toString());
-        g.setImporte(new BigDecimal(txtImporte.getText()));
-        g.setIdProveedor(Integer.parseInt(txtIdProveedor.getText()));
-
-        int r = oGastoBL.agregar(g);
-        if (r > 0) {
-            JOptionPane.showMessageDialog(this, "Gasto agregado correctamente ✅");
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al agregar gasto ❌");
-        }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
       
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void btnListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarActionPerformed
-            listar();
-    }//GEN-LAST:event_btnListarActionPerformed
-
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        if (btnNuevo.getText().equalsIgnoreCase("Nuevo")){
-            btnNuevo.setText("Cancelar");
-            limpiar();
-            activarbotones(true,false,false);
-        }
-        else {
-            btnNuevo.setText("Nuevo");
-            limpiar();
-            activarbotones(false,true,false);
-            validarCampos();
-            habilitarCampos();
-            txtIdProveedor.requestFocus();
-        }
+        if (!validarCampos()) return;
         
-    }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         try {
-            if (txtId.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Seleccione un gasto para actualizar");
-                return;
-            }
             Gastos g = new Gastos();
-            g.setIdgasto(Integer.parseInt(txtId.getText()));
-            g.setFechaGasto(txtFechaGasto.getDate());
+            g.setFechaGasto(new java.sql.Date(txtFechaGasto.getDate().getTime()));
             g.setTipoDocumento(cboTipoDoc.getSelectedItem().toString());
             g.setNumeroDocumento(txtNumDoc.getText());
             g.setConcepto(txtaConcepto.getText());
@@ -500,11 +492,57 @@ private void habilitarCampos() {
             g.setImporte(new BigDecimal(txtImporte.getText()));
             g.setIdProveedor(Integer.parseInt(txtIdProveedor.getText()));
 
+            int r = oGastoBL.agregar(g);
+            if (r > 0) {
+                JOptionPane.showMessageDialog(this, "Gasto agregado correctamente ✅");
+                limpiar();
+                listar();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al agregar gasto ❌");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+      habilitarCampos();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarActionPerformed
+            String idProveedorStr = JOptionPane.showInputDialog(this, "Ingrese el ID del proveedor:");
+        if (idProveedorStr != null && !idProveedorStr.trim().isEmpty()) {
+            try {
+                int idProveedor = Integer.parseInt(idProveedorStr);
+                List<Gastos> lista = oGastoBL.buscarPorProveedor(idProveedor);
+                cargarTablaBusqueda(lista);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "ID Proveedor debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnListarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+       limpiar();
+       habilitarCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        
+        if (!validarCampos()) return;
+        
+        try {
+            Gastos g = new Gastos();
+            g.setIdgasto(Integer.parseInt(txtId.getText()));
+            g.setIdProveedor(Integer.parseInt(txtIdProveedor.getText()));
+            g.setFechaGasto(new java.sql.Date(txtFechaGasto.getDate().getTime()));
+            g.setTipoDocumento(cboTipoDoc.getSelectedItem().toString());
+            g.setNumeroDocumento(txtNumDoc.getText());
+            g.setConcepto(txtaConcepto.getText());
+            g.setMoneda(cboMoneda.getSelectedItem().toString());
+            g.setImporte(new BigDecimal(txtImporte.getText()));
             int r = oGastoBL.actualizar(g);
             if (r > 0) {
                 JOptionPane.showMessageDialog(this, "Gasto actualizado correctamente ✅");
-                listar();
                 limpiar();
+                listar();
             } else {
                 JOptionPane.showMessageDialog(this, "Error al actualizar gasto ❌");
             }
@@ -514,23 +552,27 @@ private void habilitarCampos() {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int fila = lbListar.getSelectedRow();
-    if (fila >= 0) {
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar el gasto?",
-                "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            int idGasto = Integer.parseInt(lbListar.getValueAt(fila, 0).toString());
+       
+        int fila = tblListar.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un gasto de la tabla para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int idGasto = Integer.parseInt(tblListar.getValueAt(fila, 0).toString());
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro de eliminar este gasto?", "Confirmar eliminación", 
+            JOptionPane.YES_NO_OPTION);
+        
+        if (confirmacion == JOptionPane.YES_OPTION) {
             int r = oGastoBL.eliminar(idGasto);
             if (r > 0) {
                 JOptionPane.showMessageDialog(this, "Gasto eliminado correctamente ✅");
-                listar(); // Refrescar la tabla
+                listar();
             } else {
                 JOptionPane.showMessageDialog(this, "Error al eliminar gasto ❌");
             }
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Seleccione un gasto de la tabla");
-    }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -538,17 +580,29 @@ private void habilitarCampos() {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        if (txtId.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Primero seleccione un proveedor de la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        
+        int fila = tblListar.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un gasto de la tabla para editar", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
-        habilitarCampos();
-        //modoEdicion = true;
-        btnGuardar.setEnabled(false);
-        btnActualizar.setEnabled(true);
-        txtIdProveedor.requestFocus();
+        // Cargar datos del gasto seleccionado en los controles
+        txtId.setText(tblListar.getValueAt(fila, 0).toString());
+        txtIdProveedor.setText(tblListar.getValueAt(fila, 1).toString());
+        // La fecha necesitaría conversión específica
+        cboTipoDoc.setSelectedItem(tblListar.getValueAt(fila, 3).toString());
+        txtNumDoc.setText(tblListar.getValueAt(fila, 4).toString());
+        txtaConcepto.setText(tblListar.getValueAt(fila, 5).toString());
+        cboMoneda.setSelectedItem(tblListar.getValueAt(fila, 6).toString());
+        txtImporte.setText(tblListar.getValueAt(fila, 7).toString());
+        
+        activarBotones(false, true, true);
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTodoActionPerformed
+        listar();
+    }//GEN-LAST:event_btnTodoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -594,6 +648,7 @@ private void habilitarCampos() {
     private javax.swing.JButton btnListar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnTodo;
     private javax.swing.JComboBox<String> cboMoneda;
     private javax.swing.JComboBox<String> cboTipoDoc;
     private javax.swing.JLabel jLabel1;
@@ -606,9 +661,12 @@ private void habilitarCampos() {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable lbListar;
+    private javax.swing.JLabel lbResultado;
+    private javax.swing.JTable tblListar;
     private com.toedter.calendar.JDateChooser txtFechaGasto;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtIdProveedor;
