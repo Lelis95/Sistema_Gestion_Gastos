@@ -53,11 +53,10 @@ public class UsuarioDAL {
         rs = cs.executeQuery();
 
         if (rs.next()) {
-            r = rs.getInt("idUsuario");  // el procedimiento devuelve el id generado
+            r = rs.getInt("idUsuario"); 
         }
 
     } catch (SQLException ex) {
-        // Código 1062 = error por entrada duplicada en MySQL
         if (ex.getErrorCode() == 1062) {
             JOptionPane.showMessageDialog(null,
                     "El usuario '" + unUsuario.getNombreUsuario() + "' ya existe.",

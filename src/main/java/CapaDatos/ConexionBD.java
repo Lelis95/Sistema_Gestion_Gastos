@@ -12,7 +12,7 @@ public class ConexionBD {
     public Connection abrirConexion(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
-            cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/DBGastos?user=root&password=Lelis955&"
+            cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/DBGastos?user=root&password=soporte2025&"
                     +"allowPublicKeyRetrieval=true&useSSL=false");
         }catch(Exception el){
             System.out.println("Error Sql :"+el.getMessage());

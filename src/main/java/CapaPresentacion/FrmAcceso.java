@@ -126,9 +126,9 @@ private int obtenerIdUsuario(String usuario) {
         jPanel2.add(txtLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 120, -1));
         jPanel2.add(txtPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 120, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 300, 210));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 300, 210));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 260));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, 260));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
