@@ -39,7 +39,6 @@ public class UsuarioDAL {
    public int agregar(Usuario unUsuario) {
     int r = 0;
     CallableStatement cs = null;
-    ResultSet rs = null;
 
     try {
         cs = cn.prepareCall("{call sp_insertarUsuario(?,?,?,?,?,?)}");
@@ -50,11 +49,7 @@ public class UsuarioDAL {
         cs.setString(5, unUsuario.getPerfil());
         cs.setString(6, unUsuario.getEstado());
 
-        rs = cs.executeQuery();
-
-        if (rs.next()) {
-            r = rs.getInt("idUsuario"); 
-        }
+        r = cs.executeUpdate();
 
     } catch (SQLException ex) {
         if (ex.getErrorCode() == 1062) {
@@ -70,7 +65,6 @@ public class UsuarioDAL {
         }
     } finally {
         try {
-            if (rs != null) rs.close();
             if (cs != null) cs.close();
         } catch (SQLException e) {
             e.printStackTrace();
